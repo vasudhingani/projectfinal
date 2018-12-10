@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <title>
+        Create an Acount
+    </title>
+    <body>
+       <h1>Please Enter Your Info</h1>
+        <p> E ID</p>
+        <input type="text" placeholder="Id Number" id="ID_Number" > 
+        
+        <p> Manager ID</p> 
+        <input type="text" placeholder="Manager ID" id="Managed_BY">
+       
+        <p> Name</p>
+        <input type="text" placeholder="First, last" id="Name">
+        <p> Address</p>
+        <input type="text" placeholder="Address" id="Address">
+        <p> Phone_Number</p>
+        <input type="text" placeholder="Phone_Number" id="Phone_Number">
+        <p> Shift</p>
+        <input type="text" placeholder="m, a, n" id="Shift">
+        <p> Valet Company</p>
+        <input type="text" placeholder="Valet company" id="Vale_company">
+        <p> Title</p>
+        <input type="text" placeholder="DI, SU, or MA" id="Title">
+        <p>Password</p>
+        <input type="text" placeholder="Password (more than 7 )" id="password">
+
+        <button id="submit">submit</button>
+        <p id="faliure-msg"></p>
+
+
+        <script>
+        (function(){
+            const ID_Number= document.querySelector('#ID_Number')
+            const Managed_BY= document.querySelector('#Managed_BY')
+            const Name= document.querySelector('#Name')
+            const Address= document.querySelector('#Address')
+            const Phone_Number= document.querySelector('#Phone_Number')
+            const Shift= document.querySelector('#Shift')
+            const Vale_company= document.querySelector('#Vale_company')
+            const Title= document.querySelector('#Title')
+            const password= document.querySelector('#password')
+            const submitButton = document.querySelector("#submit")
+            const failureMessage=document.querySelector('#faliure-msg');
+            const GLOBAL_SALT = '$2b$04$0C1ZMs9dTo80pglNyFweNO';
+
+            submitButton.addEventListener('click', function(e){
+                const ID_Numberfi=ID_Number.value;
+                const Managed_BYfi=Managed_BY.value;
+                const Namefi=Name.value;
+                const addressfi=Address.value;
+                const Phone_Numberfi=Phone_Number.value;
+                const Shiftfi=Shift.value;
+                const Vale_companyfi=Vale_company.value;
+                const Titlefi=Title.value;      
+                const passwordfi= password.value;      
+                fetch('/api/create-account', {
+                
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8"
+                    },//"mode" : "no-cors",
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        ID_Number: +ID_Numberfi,
+                        Managed_BY: +Managed_BYfi,
+                        Name: Namefi,
+                        address: addressfi,
+                        Phone_Number: +Phone_Numberfi,
+                        Shift: Shiftfi,
+                        Vale_company: +Vale_companyfi,
+                        Title: Titlefi,
+                        password: passwordfi
+                    })
+                })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response);
+                    if (response.success) {
+                        location.href='index.html';
+                    } else {
+                        failureMessage.innerText=response.message;
+
+                    }
+                }); 
+            });
+        
+        })();
+        </script>
+
+
+    </body>
+</html>

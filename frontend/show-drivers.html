@@ -1,0 +1,70 @@
+<!doctype html>
+<html> 
+<head>
+    
+    <title>
+        Show Driver
+    </title>
+    
+</head>
+<body>
+        <ul class="nav">
+        
+                <div class="logo">
+                    Show Driver
+                </div>
+                
+                <li><a href="main.html" id="home">Home</a></li>
+                <li><a href="index.html" id="logout">Log Out</a></li>
+
+        
+                
+            </ul>
+            
+            <div id="driver-container">
+            </div>
+            <div id = "driverPanel">
+                </div>
+<script>
+    (function(){
+        const driverContainer = document.querySelector('#driver-container');
+        const driverPanel=document.querySelector('#driverPanel');
+        const displayDriver = function(driver) {
+            console.log(cars)
+            while (driverPanel.firstChild) {
+                driverPanel.removeChild(driverPanel.firstChild);
+            }
+            for (const entry of driver.driverPanel) {
+                const wrapper = document.createElement('div');
+                wrapper.style.padding = '16px';
+                wrapper.style.border = 'solid black 1px';
+                wrapper.innerText = new Date(entry.utc).toLocaleString() + ' - ' + entry.serviceType;
+                driverPanel.appendChild(wrapper);
+            }
+        };
+        const getDriver = function(employees) {
+            console.log(employees);
+            const driverWrapper = document.createElement('div');
+            const driverDetails = document.createElement('span');
+            driverDetails.innerText = 'EID: '+employees.ID_Number + 'Manager ID:' + employees.Managed_BY + ';\t' + employees.Name + '\t' + employees.Phone_Number + ';' + employees.Shift + '.';
+                driverWrapper.appendChild(driverDetails);
+                driverWrapper.appendChild(document.createElement('br'));
+                driverWrapper.addEventListener('click', () => displayDriver(employees));
+            return driverWrapper;
+        };
+    
+        fetch('/api/show-drivers', {
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(response => {
+            for (const employee of response) {
+                driverContainer.appendChild(getDriver(employee));
+            }
+        });
+        
+    })();
+</script>
+</div>
+</body>
+</html>

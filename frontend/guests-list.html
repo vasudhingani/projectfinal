@@ -1,0 +1,70 @@
+<!doctype html>
+<html> 
+<head>
+    
+    <title>
+        Guest List
+    </title>
+    
+</head>
+<body>
+        <ul class="nav">
+        
+                <div class="logo">
+                    Show Guest List 
+                </div>
+                
+                <li><a href="main.html" id="home">Home</a></li>
+                <li><a href="index.html" id="logout">Log Out</a></li>
+
+        
+                
+            </ul>
+            
+            <div id="guest-container">
+            </div>
+            <div id = "guestPanel">
+                </div>
+<script>
+    (function(){
+        const guestContainer = document.querySelector('#guest-container');
+        const guestPanel=document.querySelector('#guestPanel');
+        const displayGuest = function(guest) {
+            console.log(cars)
+            while (guestPanel.firstChild) {
+                guestPanel.removeChild(guestPanel.firstChild);
+            }
+            for (const entry of guest.guestPanel) {
+                const wrapper = document.createElement('div');
+                wrapper.style.padding = '16px';
+                wrapper.style.border = 'solid black 1px';
+                wrapper.innerText = new Date(entry.utc).toLocaleString() + ' - ' + entry.serviceType;
+                guestPanel.appendChild(wrapper);
+            }
+        };
+        
+        const getGuest = function(guest) {
+            console.log(guest);
+            const guestWrapper = document.createElement('h4');
+            guestWrapper.style.margin = '16px';
+            guestWrapper.style.marginRight='10px'
+            guestWrapper.innerText = guest.FirstName + '' + guest.LastName+ ' Hotel:' + guest.Hotel_ID +'Room Number' + guest.Room_Number;
+            guestWrapper.appendChild(document.createElement('br'));
+            return guestWrapper;
+        };
+    
+        fetch('/api/guests-list', {
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(response => {
+            for (const guest of response) {
+                guestContainer.appendChild(getGuest(guest));
+            }
+        });
+        
+    })();
+</script>
+</div>
+</body>
+</html>

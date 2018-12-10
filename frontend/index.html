@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login </h1>
+    <p>Please Enter Username (EID) </p>
+    <input type="text" placeholder="Enter ID Number" id="user_Name" >
+    <p>Please Enter Password</p>
+    <input type="text" placeholder="Enter Password" id="password">
+    <button id="Login">Login</button>
+    <p id="failure-message"></p>
+    <script>
+            (function() {
+                const input_id = document.querySelector('#user_Name');
+                const input_pass = document.querySelector('#password');
+                const button_submit = document.querySelector('#Login');
+                const failureMessage = document.querySelector('#failure-message');
+                button_submit.addEventListener('click', function(e) {
+                    const username = input_id.value;
+                    const password = input_pass.value;
+                   fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },//"mode" : "no-cors",
+                        credentials: 'same-origin',
+                        body: JSON.stringify({
+                            username: +username,
+                            password
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        console.log(response);
+                        if (response.success) {
+                            if (response.isManager) {
+                                location.href = 'main.html';
+                            } 
+                            
+                        } else {
+                            failureMessage.innerText=response.message;
+                        }
+                    });
+                });
+            })();
+        </script>
+
+</body>
+</html>

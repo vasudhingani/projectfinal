@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+        <head>
+                <!-- Required meta tags -->
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            
+                <!-- Bootstrap CSS -->
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+                <style>
+                    body {
+                        padding: 2rem 0;
+                    }
+                    .column-label {
+                      background-color: rgba(86, 61, 124, .15);
+                    }
+                    [class*="col-"] {
+                      padding-top: 1rem;
+                      padding-bottom: 1rem;
+                      border: 1px solid rgba(86, 61, 124, .2);
+                    }
+                    .table {
+                      margin-bottom: 32px;
+                    }
+                    h1 {
+                      margin-bottom: 1rem;
+                    }
+                    .lead {
+                      display: flex;
+                    }
+                    .lead span {
+                      flex-grow: 1;
+                    }
+                    .lead a {
+                      cursor: pointer;
+                    }
+                </style>
+                <title>sample queries</title>
+              </head>
+              <body>
+                <div class="container">
+                    <h1>Sample Queries</h1>
+                </div>
+            
+                <!-- Optional JavaScript -->
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+                <script>
+      fetch('/api/queries', {
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        for (const query of response) {
+          const table = document.createElement('div');
+          table.className = 'table';
+          const queryDescription = document.createElement('p');
+          queryDescription.className = 'lead';
+          const queryDescriptionText = document.createElement('span');
+          queryDescriptionText.innerText = query.label;
+          queryDescription.appendChild(queryDescriptionText);
+          if (query.action) {
+            const actionLink = document.createElement('a');
+            actionLink.href = '#';
+            actionLink.innerText = query.action.message;
+            actionLink.addEventListener('click', function(e) {
+              fetch(query.action.url, {
+                credentials: 'same-origin',
+                method: query.action.method,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: query.action.body && JSON.stringify(query.action.body)
+              })
+              .then(res => res.json())
+              .then(response => {
+                console.log(response);
+                location.reload();
+              });
+            });
+            queryDescription.appendChild(actionLink);
+          }
+          table.appendChild(queryDescription);
+          const firstRow = document.createElement('div');
+          firstRow.className = 'row';
+          for (const column of query.columns) {
+            const col = document.createElement('div');
+            col.className = 'col-md column-label';
+            col.innerText = column;
+            firstRow.appendChild(col);
+          }
+          table.appendChild(firstRow);
+          for (const dataRow of query.table) {
+            const row = document.createElement('div');
+            row.className = 'row';
+            for (const column of query.columns) {
+              const col = document.createElement('div');
+              col.className = 'col-md';
+              col.innerText = dataRow[column];
+              row.appendChild(col);
+            }
+            table.appendChild(row);
+          }
+          document.querySelector('.container').appendChild(table);
+        }
+      });
+    </script>
+  </body>
+</html>

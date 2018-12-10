@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<title>
+    Parked Cars
+</title>
+</head>
+<body>
+        <ul class="nav">
+        
+                <div class="logo">
+                    Parked Cars 
+                </div>
+                
+                <li><a href="main.html" id="home">Home</a></li>
+                
+                
+            </ul>
+
+            <div id="cars-container"> 
+            
+            </div>
+
+
+            <div id="panel">
+                </div>
+
+            <script>
+                    (function(){
+                       
+                        const CarContainer=document.querySelector('#cars-container');
+                        const panel=document.querySelector('#panel');
+                        const displayCars = function(cars) {
+                            console.log(cars)
+                            while (panel.firstChild) {
+                                panel.removeChild(panel.firstChild);
+                            }
+                            for (const entry of cars.panel) {
+                                const wrapper = document.createElement('div');
+                                wrapper.style.padding = '16px';
+                                wrapper.style.border = 'solid black 1px';
+                                wrapper.innerText = new Date(entry.utc).toLocaleString() + ' - ' + entry.serviceType;
+                                panel.appendChild(wrapper);
+                            }
+                        };
+                        const getCar = function(cars) {
+                            console.log(cars);
+                            const carsWrapper = document.createElement('div');
+                            const carsDetails = document.createElement('span');
+                            carsDetails.innerText = cars.Description + '\n Ticket number: ' + cars.Ticket_Number+ '\n' ;
+                            carsWrapper.appendChild(carsDetails);
+                            carsWrapper.appendChild(document.createElement('br'));
+                            carsWrapper.addEventListener('click', () => displayCars(cars));
+                            return carsWrapper;
+                        };
+                        fetch('/api/find-cars', {
+                            credentials: 'same-origin'
+                        })
+                        .then(response => response.json())
+                        .then(response => {
+                            console.log(response);
+                            for (const car of response) {
+                                CarContainer.appendChild(getCar(car));
+                            }
+                        });
+                        
+                    })();
+                </script>
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        Please Fill the quest information
+    </header>
+
+
+    <body>
+             
+             <p> Room Number </p>
+             <input type="text" id="RoomNumber">
+             <p> Hotel </p>
+             <input type="text" placeholder="Hotel ID Number" id="hotelID">
+             <p> Guest Name </p>
+             <input type="text" id="FirstName" placeholder="Enter First Name">
+             <input type="text" id="LastName"placeholder="Enter Last Name" >
+
+             <div>
+             <button id="submit_guest">submit guest details</button>
+            </div>
+
+             <p> Ticket Number </p>
+             <input type="text" id="TNumber">
+             <p> Description </p>
+             <input type="text" placeholder="year, model, color" id="Description">
+             <p> Room_Number </p>
+             <input type="text" id="RoomNumber_car">
+             <button id="submit_parking">submit parking details</button>
+
+             <p id="faliure-msg"></p>
+     
+     
+             <script>
+            
+
+
+             (function(){
+
+
+                 const Room_Number= document.querySelector('#RoomNumber')
+                 const Hotel_ID= document.querySelector('#hotelID')
+                 const LastName= document.querySelector('#LastName')
+                 const FirstName= document.querySelector('#FirstName')
+                 const submit_guest_Button = document.querySelector("#submit_guest")
+                 const Ticket_Number= document.querySelector('#TNumber')
+                 const Description= document.querySelector('#Description')
+                 const Room_Number_car= document.querySelector('#RoomNumber_car')
+                 const failureMessage=document.querySelector('#faliure-msg');
+     
+                 submit_guest_Button.addEventListener('click', function(e){
+                     const RN_val=Room_Number.value;
+                     const H_ID=Hotel_ID.value;
+                     const LName=LastName.value;
+                     const FName=FirstName.value;
+                     
+                     fetch('/api/add-guests', {
+                     
+                         method: 'POST',
+                         headers: {
+                             "Content-Type": "application/json; charset=utf-8"
+                         },//"mode" : "no-cors",
+                         credentials: 'same-origin',
+                         body: JSON.stringify({
+                            Room_Number: RN_val,
+                            Hotel_ID: +H_ID,
+                             LastName: LName,
+                             FirstName: FName,
+                            
+                         })
+                     })
+                     .then(response => response.json())
+                     .then(response => {
+                         console.log(response);
+                         if (response.success) {
+                             console.log('Guest has been added corectly');
+                         } else {
+                             failureMessage.innerText=response.message;
+     
+                         }
+                     }); 
+                    });
+               
+
+                 //add Guest Car
+                 submit_parking.addEventListener('click', function(e){
+                     const TN_VAL=Ticket_Number.value;
+                     const Des_VAL=Description.value;
+                     const RN2=Room_Number_car.value;
+                   
+                     
+                     fetch('/api/addParking', {
+                     
+                         method: 'POST',
+                         headers: {
+                             "Content-Type": "application/json; charset=utf-8"
+                         },//"mode" : "no-cors",
+                         credentials: 'same-origin',
+                         body: JSON.stringify({
+                            Ticket_Number: TN_VAL,
+                            Description: Des_VAL,
+                            Room_Number: RN2,
+                            
+                         })
+                     })
+                     .then(response => response.json())
+                     .then(response => {
+                         console.log(response);
+                         if (response.success) {
+                             console.log('car has been added corectly');
+                         } else {
+                             failureMessage.innerText=response.message;
+     
+                         }
+                     }); 
+                 });
+             
+             })();
+
+
+
+
+             </script>
+     
+     
+         </body>
+    </html>
